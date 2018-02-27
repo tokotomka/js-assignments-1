@@ -203,7 +203,7 @@ describe('06-conditions-n-loops-tasks', function() {
             { str: 'entente', expected: null }
         ].forEach(data => {
             var actual = tasks.findFirstSingleChar(data.str);
-            assert.equal(
+            assert.strictEqual(
                 actual,
                 data.expected,
                 `First single char of '${data.str}' = '${data.expected}', but actual '${actual}'`
