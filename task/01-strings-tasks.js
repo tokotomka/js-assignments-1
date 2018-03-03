@@ -119,7 +119,7 @@ function repeatString(value, count) {
 
 /**
  * Remove the first occurrence of string inside another string
- * 
+ *
  * @param {string} str
  * @param {string} value
  * @return {string}
@@ -225,8 +225,15 @@ function getRectangleString(width, height) {
 function encodeToRot13(str) {
     let alp = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     let alpRot13 = 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm';
-    // return str.replace(str.charAt(0), alpRot13.charAt(alp.indexOf(str.charAt(0))))
-  throw new Error('Not implemented');
+    let s = '';
+    for(let i = 0; i < str.length; i++) {
+      if(str.charCodeAt(i) < 65 || str.charCodeAt(i) > 122) {
+        s = s.concat(str.charAt(i));
+      } else {
+        s = s.concat(alpRot13.charAt(alp.indexOf(str.charAt(i))));
+      };
+    }
+  return s;
 }
 
 /**
@@ -249,23 +256,23 @@ function isString(value) {
 
 /**
  * Returns playid card id.
- * 
+ *
  * Playing cards inittial deck inclides the cards in the following order:
- * 
+ *
  *  'A♣','2♣','3♣','4♣','5♣','6♣','7♣','8♣','9♣','10♣','J♣','Q♣','K♣',
  *  'A♦','2♦','3♦','4♦','5♦','6♦','7♦','8♦','9♦','10♦','J♦','Q♦','K♦',
  *  'A♥','2♥','3♥','4♥','5♥','6♥','7♥','8♥','9♥','10♥','J♥','Q♥','K♥',
  *  'A♠','2♠','3♠','4♠','5♠','6♠','7♠','8♠','9♠','10♠','J♠','Q♠','K♠'
- * 
+ *
  * (see https://en.wikipedia.org/wiki/Standard_52-card_deck)
  * Function returns the zero-based index of specified card in the initial deck above.
- * 
+ *
  * @param {string} value
  * @return {number}
  *
  * @example
  *   'A♣' => 0
- *   '2♣' => 1 
+ *   '2♣' => 1
  *   '3♣' => 2
  *     ...
  *   'Q♠' => 50
