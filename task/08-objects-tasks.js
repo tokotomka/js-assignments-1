@@ -23,12 +23,12 @@
  *    console.log(r.getArea());   // => 200
  */
 function Rectangle(width, height) {
-  let rec = {
-    width: width,
-    height: height,
-    getArea: () => width * height
-  };
-  return rec;
+    this.width = width;
+    this.height = height;
+}
+
+Rectangle.prototype.getArea = function () {
+    return this.width * this.height;
 }
 
 
@@ -43,7 +43,7 @@ function Rectangle(width, height) {
  *    { width: 10, height : 20 } => '{"height":10,"width":20}'
  */
 function getJSON(obj) {
-  return JSON.stringify(obj);
+    return JSON.stringify(obj);
 }
 
 
@@ -59,7 +59,8 @@ function getJSON(obj) {
  *
  */
 function fromJSON(proto, json) {
-  throw new Error('Not implemented');
+    let obj = Object.create(proto);
+    return Object.assign(obj, JSON.parse(json))
 }
 
 
@@ -111,41 +112,115 @@ function fromJSON(proto, json) {
  *  For more examples see unit tests.
  */
 
-const cssSelectorBuilder = {
+class Selector {
+    constructor(arr) {
+        this.arr = arr;
+    }
 
-  element: function (value) {
-    throw new Error('Not implemented');
-  },
+    _getLastEl() {
+        return this.arr.slice(-1)[0];
+    }
 
-  id: function (value) {
-    throw new Error('Not implemented');
-  },
+    _getPrefix(el) {
+        if (el.includes('::')) {
+            return '::';
+        } else if (/[A-Za-z]/.test(el[0])) {
+            return '_';
+        } else {
+            return el[0]
+        }
+    }
 
-  class: function (value) {
-    throw new Error('Not implemented');
-  },
+    _getPrefixIndex(prefix) {
+        const pr = ['#', '.', '[', ':', '::'];
+        return pr.indexOf(prefix);
+    }
 
-  attr: function (value) {
-    throw new Error('Not implemented');
-  },
 
-  pseudoClass: function (value) {
-    throw new Error('Not implemented');
-  },
+    checkDuplicates(it) {
+        if (this.arr.length) {
+            if (['_', '#', '::'].some(e => e === this._getPrefix(it))) {
+                let a = this.arr.map(e => this._getPrefix(e));
+                if (a.filter(e => e === this._getPrefix(it)).length) {
+                    throw 'Element, id and pseudo-element should not occur more then one time inside the selector';
+                }
+            }
+        }
+        return this;
+    }
 
-  pseudoElement: function (value) {
-    throw new Error('Not implemented');
-  },
+    checkOrder(it) {
+        if (this.arr.length) {
+            let elIndex = this._getPrefixIndex(this._getPrefix(it));
+            let lastElIndex = this._getPrefixIndex(this._getPrefix(this._getLastEl()));
+            if (lastElIndex > elIndex) {
+                throw 'Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element';
+            }
+        }
+        return this;
+    }
 
-  combine: function (selector1, combinator, selector2) {
-    throw new Error('Not implemented');
-  },
-};
+    addItem(value) {
+        this.arr.push(value);
+        return this;
+    }
+}
 
+class SelectorBuilder {
+    constructor(selector) {
+        this.selector = selector;
+    }
+
+    _newBuilder(value) {
+        return new SelectorBuilder(
+            new Selector(this.selector.arr.slice())
+                .checkDuplicates(value)
+                .checkOrder(value)
+                .addItem(value));
+    }
+
+    css(value) {
+        return new SelectorBuilder(new Selector(this.selector.arr.slice()).addItem(value));
+    }
+
+    element(value) {
+        return this._newBuilder(value);
+    }
+
+    id(value) {
+        return this._newBuilder(`#${value}`);
+    }
+
+    class(value) {
+        return this._newBuilder(`.${value}`);
+    }
+
+    attr(value) {
+        return this._newBuilder(`[${value}]`);
+    }
+
+    pseudoClass(value) {
+        return this._newBuilder(`:${value}`);
+    }
+
+    pseudoElement(value) {
+        return this._newBuilder(`::${value}`);
+    }
+
+    combine(builder1, combinator, builder2) {
+        return builder1.css(` ${combinator} ` + builder2.stringify());
+    }
+
+    stringify() {
+        return this.selector.arr.join('');
+    }
+}
+
+const cssSelectorBuilder = new SelectorBuilder(new Selector([]));
 
 module.exports = {
-  Rectangle: Rectangle,
-  getJSON: getJSON,
-  fromJSON: fromJSON,
-  cssSelectorBuilder: cssSelectorBuilder
+    Rectangle: Rectangle,
+    getJSON: getJSON,
+    fromJSON: fromJSON,
+    cssSelectorBuilder: cssSelectorBuilder
 };
