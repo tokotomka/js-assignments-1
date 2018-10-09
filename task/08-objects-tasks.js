@@ -29,7 +29,7 @@ function Rectangle(width, height) {
 
 Rectangle.prototype.getArea = function () {
     return this.width * this.height;
-}
+};
 
 
 /**
@@ -180,7 +180,9 @@ class SelectorBuilder {
     }
 
     css(value) {
-        return new SelectorBuilder(new Selector(this.selector.arr.slice()).addItem(value));
+        return new SelectorBuilder(
+            new Selector(this.selector.arr.slice())
+            .addItem(value));
     }
 
     element(value) {
