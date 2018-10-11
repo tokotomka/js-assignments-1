@@ -13,7 +13,7 @@
 /**
  * Returns an area of a rectangle given by width and heigth.
  *
- * @param {numder} width
+ * @param {number} width
  * @param {number} height
  * @return {number}
  *
@@ -54,7 +54,7 @@ function getCicleCircumference(radius) {
  *  -3, 3  => 0
  */
 function getAverage(value1, value2) {
-    return value1/2 + value2/2;
+    return value1 / 2 + value2 / 2;
 }
 
 /**
@@ -89,7 +89,7 @@ function getDistanceBetweenPoints(x1, y1, x2, y2) {
  *   5*x = 0         => 0
  */
 function getLinearEquationRoot(a, b) {
-    return -b/a;
+    return -b / a;
 }
 
 
@@ -111,7 +111,7 @@ function getLinearEquationRoot(a, b) {
  *   (0,1) (1,2)     => 0
  */
 function getAngleBetweenVectors(x1, y1, x2, y2) {
-    return Math.acos(((x1*x2 + y1*y2)/Math.hypot(x1, y1) * Math.hypot(x2, y2)));
+    return Math.acos(((x1 * x2 + y1 * y2) / Math.hypot(x1, y1) * Math.hypot(x2, y2)));
 }
 
 /**
@@ -143,7 +143,7 @@ function getLastDigit(value) {
  * '-525.5'     => -525.5
  */
 function parseNumberFromString(value) {
-    return value.valueOf();
+    return +value;
 }
 
 /**
@@ -159,7 +159,7 @@ function parseNumberFromString(value) {
  *   3,3,3   => 5.196152422706632
  *   1,2,3   => 3.741657386773941
  */
-function getParallelipidedDiagonal(a,b,c) {
+function getParallelipidedDiagonal(a, b, c) {
     return Math.hypot(a, b, c);
 }
 
@@ -202,12 +202,13 @@ function roundToPowerOfTen(num, pow) {
  *   17 => true
  */
 function isPrime(n) {
-  for(let i = 2; i < n; i++) {
-    if(n % i === 0 ) {
-      return 0
+    let sqrt = Math.sqrt(n);
+    for (let i = 2; i <= sqrt; i++) {
+        if (n % i === 0) {
+            return false;
+        }
     }
-  };
-  return 1;
+    return true;
 }
 
 /**

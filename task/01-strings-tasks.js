@@ -8,7 +8,6 @@
  ********************************************************************************************/
 
 
-
 /**
  * Returns the result of concatenation of two strings.
  *
@@ -84,7 +83,7 @@ function extractNameFromTemplate(value) {
  *   'cat'       => 'c'
  */
 function getFirstChar(value) {
-    return value.charAt(0);
+    return value[0];
 }
 
 /**
@@ -226,14 +225,14 @@ function encodeToRot13(str) {
     let alp = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     let alpRot13 = 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm';
     let s = '';
-    for(let i = 0; i < str.length; i++) {
-      if(str.charCodeAt(i) < 65 || str.charCodeAt(i) > 122) {
-        s = s.concat(str.charAt(i));
-      } else {
-        s = s.concat(alpRot13.charAt(alp.indexOf(str.charAt(i))));
-      };
+    for (let i = 0; i < str.length; i++) {
+        if (str.charCodeAt(i) < 65 || str.charCodeAt(i) > 122) {
+            s = s.concat(str.charAt(i));
+        } else {
+            s = s.concat(alpRot13.charAt(alp.indexOf(str.charAt(i))));
+        }
     }
-  return s;
+    return s;
 }
 
 /**
@@ -279,8 +278,8 @@ function isString(value) {
  *   'K♠' => 51
  */
 function getCardId(value) {
-  let m = '♣♦♥♠';
-  let n = 'A234567891JQK';
+    let m = '♣♦♥♠';
+    let n = 'A234567891JQK';
     return n.indexOf(value.charAt(0)) + 13 * m.indexOf(value.charAt(value.length - 1));
 }
 

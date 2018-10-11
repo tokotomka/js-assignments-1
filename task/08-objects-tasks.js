@@ -182,7 +182,7 @@ class SelectorBuilder {
     css(value) {
         return new SelectorBuilder(
             new Selector(this.selector.arr.slice())
-            .addItem(value));
+                .addItem(value));
     }
 
     element(value) {

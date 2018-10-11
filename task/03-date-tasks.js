@@ -22,7 +22,7 @@
  *    'Sun, 17 May 1998 03:00:00 GMT+01' => Date()
  */
 function parseDataFromRfc2822(value) {
-  return new Date(value);
+    return new Date(value);
 }
 
 /**
@@ -37,7 +37,7 @@ function parseDataFromRfc2822(value) {
  *    '2016-01-19T08:07:37Z' => Date()
  */
 function parseDataFromIso8601(value) {
-  return new Date(value);
+    return new Date(value);
 }
 
 
@@ -56,20 +56,20 @@ function parseDataFromIso8601(value) {
  *    Date(2015,1,1)    => false
  */
 function isLeapYear(date) {
-  let year = date.getFullYear();
-  if (year % 4) {
-    return 0
-  } else {
-    if (year % 100) {
-      return 1
-    } else {
-      if (year % 400) {
+    let year = date.getFullYear();
+    if (year % 4) {
         return 0
-      } else {
-        return 1
-      }
+    } else {
+        if (year % 100) {
+            return 1
+        } else {
+            if (year % 400) {
+                return 0
+            } else {
+                return 1
+            }
+        }
     }
-  }
 }
 
 
@@ -89,15 +89,7 @@ function isLeapYear(date) {
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,15,20,10,453)   => "05:20:10.453"
  */
 function timeSpanToString(startDate, endDate) {
-  let h = `${endDate.getHours() - startDate.getHours()}`;
-  let m = `${endDate.getMinutes() - startDate.getMinutes()}`;
-  let s = `${endDate.getSeconds() - startDate.getSeconds()}`;
-  let ms = `${endDate.getMilliseconds() - startDate.getMilliseconds()}`;
-  let hour = (h.length === 1) ? `0${h}` : h;
-  let minute = (m.length === 1) ? `0${m}` : m;
-  let second = (s.length === 1) ? `0${s}` : s;
-  let millisecond = (ms.length === 1) ? `00${ms}` : (ms.length === 2) ? `0${ms}` : ms;
-  return `${hour}:${minute}:${second}.${millisecond}`
+    return new Date(endDate - startDate).toISOString().slice(11, -1);
 }
 
 
@@ -115,16 +107,16 @@ function timeSpanToString(startDate, endDate) {
  *    Date.UTC(2016,3,5,21, 0) => Math.PI/2
  */
 function angleBetweenClockHands(date) {
-  let h = (new Date(date).getUTCHours() > 13) ? (new Date(date).getUTCHours() - 12) : new Date(date).getUTCHours();
-  let angle = Math.abs((Math.PI / 360) * (60 * h - 11 * new Date(date).getUTCMinutes()));
-  return (angle > Math.PI) ? (2 * Math.PI - angle) : angle;
+    let h = (new Date(date).getUTCHours() > 13) ? (new Date(date).getUTCHours() - 12) : new Date(date).getUTCHours();
+    let angle = Math.abs((Math.PI / 360) * (60 * h - 11 * new Date(date).getUTCMinutes()));
+    return (angle > Math.PI) ? (2 * Math.PI - angle) : angle;
 }
 
 
 module.exports = {
-  parseDataFromRfc2822: parseDataFromRfc2822,
-  parseDataFromIso8601: parseDataFromIso8601,
-  isLeapYear: isLeapYear,
-  timeSpanToString: timeSpanToString,
-  angleBetweenClockHands: angleBetweenClockHands
+    parseDataFromRfc2822: parseDataFromRfc2822,
+    parseDataFromIso8601: parseDataFromIso8601,
+    isLeapYear: isLeapYear,
+    timeSpanToString: timeSpanToString,
+    angleBetweenClockHands: angleBetweenClockHands
 };
