@@ -17,8 +17,42 @@
  *  ]
  */
 function createCompassPoints() {
-    throw new Error('Not implemented');
     var sides = ['N', 'E', 'S', 'W'];  // use array of cardinal directions only!
+    let mainWinds = [], halfWinds = [], quarterWinds = [],
+        updateWinds = (array, newArr) => {
+            array.map((e, i, arr) => {
+                newArr.push(e);
+                let el = (i === arr.length - 1) ? arr[0] : arr[i + 1];
+                let wind = (i % 2) ? el + e : e + el;
+                newArr.push(wind);
+            });
+        };
+    updateWinds(sides, mainWinds);
+    updateWinds(mainWinds, halfWinds);
+    halfWinds.map((e, i, arr) => {
+        let el;
+        quarterWinds.push(e);
+        switch (i % 4) {
+            case 0:
+                el = arr[i + 4] || arr[0];
+                quarterWinds.push(e + 'b' + el);
+                break;
+            case 1:
+                quarterWinds.push(arr[i + 1] + 'b' + arr[i - 1]);
+                break;
+            case 2:
+                el = arr[i + 2] || arr[0];
+                quarterWinds.push(e + 'b' + el);
+                break;
+            default:
+                el = arr[i + 1] || arr[0];
+                quarterWinds.push(el + 'b' + arr[i - 3]);
+        }
+
+    });
+    return quarterWinds.map((e, i) => {
+        return {abbreviation: e, azimuth: (360 / quarterWinds.length) * i}
+    });
 }
 
 
@@ -88,7 +122,41 @@ function* expandBraces(str) {
  *
  */
 function getZigZagMatrix(n) {
-    throw new Error('Not implemented');
+    let count = 0;
+    let result = Array.from({ length: n }, (e, i) => Array.from({ length: n }, (el, ind) => ind));
+    let time = 0;
+    let side = 0;
+    let j;
+    while (side < n) {
+        let i;
+        j = side;
+        for (i = 0; i <= side; i++) {
+            if (time % 2 === 0) {
+                result[j][i] = count++;
+            } else {
+                result[i][j] = count++;
+            }
+            j--;
+        }
+        time++;
+        side++;
+    }
+    side--;
+    while (side > 0) {
+        let i = n - 1;
+        let j = n - side;
+        for (i; i >= n - side; i--) {
+            if (time % 2 === 0) {
+                result[i][j] = count++;
+            } else {
+                result[j][i] = count++;
+            }
+            j++;
+        }
+        side--;
+        time++;
+    }
+    return result;
 }
 
 
